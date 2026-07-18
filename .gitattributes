@@ -1,0 +1,34 @@
+# Source77NW - line-ending and diff law for this repo.
+# Git stores LF internally; rules below govern working copies.
+
+# Default: normalize all text files (LF in repo, platform eol on checkout)
+* text=auto
+
+# C# sources: CRLF in every working copy (project convention),
+# and use git's C#-aware diff (hunk headers show method names).
+*.cs      text eol=crlf diff=csharp
+
+# Visual Studio files are CRLF-native
+*.sln     text eol=crlf
+*.csproj  text eol=crlf
+*.props   text eol=crlf
+*.targets text eol=crlf
+
+# Docs, config, data: plain normalization
+*.md      text
+*.txt     text
+*.yml     text
+*.json    text
+*.editorconfig text
+*.gitignore    text
+*.gitattributes text
+
+# Binaries: never normalize, never diff as text
+*.png     binary
+*.jpg     binary
+*.gif     binary
+*.ico     binary
+*.zip     binary
+*.dll     binary
+*.exe     binary
+*.pdb     binary

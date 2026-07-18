@@ -1,0 +1,30 @@
+<!-- Directory.Build.props - Copyright (c) GDFrank
+     SPDX-License-Identifier: MIT
+     ================================================================
+     Repo-wide MSBuild properties. MSBuild auto-imports this file
+     into EVERY .csproj under this directory tree - no reference
+     needed. Identity/metadata lives here once; per-project files
+     keep only what genuinely differs (TFMs, references).
+     ================================================================ -->
+
+<Project>
+
+  <PropertyGroup>
+    <!-- Package/assembly identity (used by NuGet pack + AssemblyInfo) -->
+    <Authors>GDFrank</Authors>
+    <Company>GDFrank</Company>
+    <Product>Source77NW</Product>
+    <Copyright>Copyright (c) GDFrank</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/GDFrank/Source77NW</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/GDFrank/Source77NW</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- Build hygiene, repo-wide -->
+    <Deterministic>true</Deterministic>
+    <LangVersion>7.3</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>
