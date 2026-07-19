@@ -1,0 +1,22 @@
+<!-- Inspect.csproj - Copyright (c) GDFrank
+     SPDX-License-Identifier: MIT
+     ================================================================
+     SAMPLE: folder-tree attribute inspector - see README.md beside
+     this file. Samples target ONE modern TFM: the LIBS project
+     already proves tri-target compatibility; samples stay quick to
+     build and clear to read. Sample-tree defaults (Exe, no doc
+     file, not packable) come from ..\Directory.Build.props.
+     ================================================================ -->
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Samples</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\LIBS.csproj" />
+  </ItemGroup>
+
+</Project>

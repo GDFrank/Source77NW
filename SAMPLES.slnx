@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/LIBS.csproj" />
+  <Project Path="samples/Inspect/Inspect.csproj" />
+</Solution>
