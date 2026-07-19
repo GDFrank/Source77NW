@@ -1,0 +1,24 @@
+<!-- Lookup.csproj - Copyright (c) GDFrank
+     SPDX-License-Identifier: MIT
+     ================================================================
+     SAMPLE: zero-copy key lookup over one loaded text - see
+     README.md beside this file. Sample-tree defaults (Exe, no doc
+     file, not packable) come from ..\Directory.Build.props.
+     ================================================================ -->
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Samples</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\LIBS.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="glossary.lsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

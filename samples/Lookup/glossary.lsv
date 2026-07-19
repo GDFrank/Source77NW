@@ -1,0 +1,46 @@
+Source77NW glossary - LSV sample data for the Lookup sample.
+This preamble is ignored by the parser: a record begins at a ':'
+line, and '.' lines within it carry the value fields. Multi-line
+values need no escaping - that is the point of LSV.
+
+:GLOSSARY Source77NW terms
+. sample data for samples/Lookup
+
+:LOUD
+. Contract violations throw an Issue immediately - misuse of the
+. library is never absorbed.
+
+:SOFT
+. Absence is a state, not an error: Try*/Got*/Did* surfaces report
+. a miss with bool + out instead of throwing.
+
+:Chars
+. A struct view (BotIndex, TopIndex) over one base string; scanning
+. and parsing move the bounds - no substrings are created.
+
+:Pluck
+. Consume from the bottom of a view or stack; Pop consumes from the
+. top. Plucked* methods return bool with the value as out.
+
+:ItemStack
+. A sliding-window stack that is also a cheap queue: Push, Pop
+. (LIFO), Pluck (FIFO), Sort, BinarySearch - a bare-metal core.
+
+:Issue
+. The single application exception: Kind + Source + Spot pack into
+. HResult; handling dispatches on Kind, not on exception type.
+
+:Spot
+. A byte pinning the exact raise site within a module's issueSource.
+
+:ARHSCE
+. FileAttr's six-char dot format: Archive ReadOnly Hidden System
+. Compressed Encrypted.
+
+:LSV
+. Line Separated Values: ':' begins a record, '.' begins a field
+. line - multi-line values need no escaping.
+
+:Agent
+. The wrapping layer that adds locking, async, and validation around
+. a bare-metal core (StackAgent around ItemStack).
