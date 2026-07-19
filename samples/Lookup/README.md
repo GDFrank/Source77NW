@@ -27,7 +27,7 @@ dotnet run --project samples/Lookup            (interactive)
 | `LsvDoc` / `LsvRecord` | One file → one `DocText` string; records plucked as views over it |
 | `Chars` | Every key and every value, held and compared as `(BotIndex, TopIndex)` views |
 | `ItemStack<Entry>` | The index: capacity-estimated, custom-`Comparer` sorted, binary-searched |
-| `Issue` / `ExitId` | Load failures and bad entries, in the same Kind-dispatch regime as `Inspect` |
+| `Issue` / `ExitId` | Load failures and bad entries, in the same Kind-dispatch regime as `ListFiles` |
 | `Exe` | Command-line as a `Chars` cursor; the default data file beside the exe |
 
 ## One string, many views

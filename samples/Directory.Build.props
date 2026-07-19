@@ -16,6 +16,10 @@
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- Samples declare [assembly:] attributes by hand in their
+         ExeMain.cs to demo the Exe identity contract, so MSBuild
+         must not synthesize its own AssemblyInfo. -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
 </Project>

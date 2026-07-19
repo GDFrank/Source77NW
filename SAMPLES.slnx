@@ -1,6 +1,6 @@
 <Solution>
   <Project Path="src/LIBS.csproj" />
-  <Project Path="samples/Inspect/Inspect.csproj" />
+  <Project Path="samples/ListFiles/ListFiles.csproj" />
   <Project Path="samples/Lookup/Lookup.csproj" />
   <Project Path="samples/EnumCodes/EnumCodes.csproj" />
 </Solution>

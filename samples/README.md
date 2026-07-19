@@ -19,7 +19,7 @@ From the repo root:
 
 ```
 dotnet build SAMPLES.slnx
-dotnet run --project samples/Inspect -- . H -d 2
+dotnet run --project samples/ListFiles -- . +H -all
 ```
 
 Each sample targets one modern TFM (the library itself proves
@@ -31,7 +31,7 @@ sample is `net8.0-windows` (WinForms): it builds everywhere via
 
 | Sample | A real tool that... | Featuring |
 |--------|---------------------|-----------|
-| [`Inspect`](Inspect/) | walks a folder tree and reports attribute bits, with filter, depth limit, and a depth-first/breadth-first switch | `Issue` (Kind dispatch), `Chars` (zero-alloc parsing), `ItemStack` (one structure, both walk orders), `FileAttr`/`FileAttrX`, `ExeLock`, `Exe`, `FS`, `ExitId` |
+| [`ListFiles`](ListFiles/) | walks a folder tree and writes a filtered file listing as TSV, with include/exclude attribute filters and a top-level/recurse switch | `Exe` (identity), `Issue` (Kind dispatch), `Chars` (zero-alloc parsing), `ItemStack` (traversal worklist), `FileAttr`, `ExeLock`, `FS`, `ExitId` |
 | [`Lookup`](Lookup/) | loads an LSV glossary once and answers key queries by binary search over Chars views — zero strings from file to console | `LsvDoc`/`LsvRecord`, `Chars` (views, CompareTo, Write), `ItemStack` (Comparer, Sort, BinarySearchNearest), `Issue`, `Exe` |
 | [`EnumCodes`](EnumCodes/) | a WinForms app whose whole UI — menus, toggles, a radio group, buttons, shortcuts, icons, dispatch, persisted state — is declared by one enum (Windows-only TFM) | `EnumCodes`, `EnumCodesAttribute`/`EnumInfoAttribute`, `ResCode`, `CodeValId`/`CodeDefId`/`ResKind`, `BytesReader` (stream providers), `Chars` (VBAR fields, ctrl parsing) |
 
@@ -39,12 +39,12 @@ sample is `net8.0-windows` (WinForms): it builds everywhere via
 
 | Type | See |
 |------|-----|
-| `Issue`, `IssueKind`, `ExitId` | `Inspect` — the error regime end to end |
-| `Chars` | `Inspect` — command-line plucking; `Lookup` — views as data: compare, sort, and Write without ToString |
-| `ItemStack<T>` | `Inspect` — the traversal worklist, `Pop()` vs `Pluck()`; `Lookup` — Comparer, `Sort`, `BinarySearchNearest` |
-| `FileAttr`, `FileAttrX` | `Inspect` — format, parse, and filter |
-| `ExeLock` | `Inspect` — single instance via a `KindId.File` lock |
-| `Exe` | `Inspect` — `GetCommandLineParams`, `ExeNameOnly`, guarded `IsAdmin` |
-| `FS` | `Inspect` — `ValidFolderPath_or_null`, `AsFileIssue` |
+| `Issue`, `IssueKind`, `ExitId` | `ListFiles` — the error regime end to end |
+| `Chars` | `ListFiles` — command-line plucking; `Lookup` — views as data: compare, sort, and Write without ToString |
+| `ItemStack<T>` | `ListFiles` — the traversal worklist; `Lookup` — Comparer, `Sort`, `BinarySearchNearest` |
+| `FileAttr` | `ListFiles` — format, parse, and include/exclude filter |
+| `ExeLock` | `ListFiles` — single instance via a `KindId.File` lock |
+| `Exe` | `ListFiles` — EntryAssembly identity, `GetCommandLineParams`, `ExeNameOnly`, guarded `IsAdmin` |
+| `FS` | `ListFiles` — `ValidFolderPath_or_null`, `AsFileIssue` |
 | `LsvDoc`, `LsvRecord` | `Lookup` — one text, records as views, fields on demand |
 | `EnumCodes`, `ResCode`, `EnumInfoAttribute` | `EnumCodes` — one enum as the whole UI: truth table, index-aligned slots, ByteCode persistence, icon/ctrl fields |

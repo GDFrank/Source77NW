@@ -3,7 +3,41 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using Source77NW;
+
+// ================================================================
+// ASSEMBLY IDENTITY
+// Source77NW.Exe reads these [assembly:] attributes once, at first
+// touch, to establish this exe's identity (Exe.DomainName,
+// Exe.ExeCodeName, Exe.ExeGuid, Exe.ExeVersion, Exe.Contact,
+// Exe.DomainFolderPath(...), etc - see Exe.cs remarks for the full
+// contract). In a real multi-exe domain the block marked
+// "domain-wide" below would move to one shared EntryAssembly.Domain.cs
+// imported by every exe in the domain (compare AppLab's
+// EXE$ExeInfo.cs + EXE.<code>.ExeInfo.cs split); a standalone sample
+// keeps both groups together in this one file (JOB.SAMPLES D1).
+// ================================================================
+
+// -- domain-wide (would move to a shared Domain.cs in a multi-exe domain) --
+[assembly: AssemblyCompany("GDFrank")] // repo convention, not 77NW.net
+[assembly: AssemblyCopyright("Copyright (c) GDFrank - All rights reserved")]
+[assembly: AssemblyMetadata("Contact", "mailto:NOBODYHERE@SAMPLES.invalid")] // .invalid = RFC 2606 reserved TLD, guaranteed dead (D5)
+[assembly: AssemblyMetadata("DomainName", "Source77NW.example")] // .example = RFC 2606 reserved documentation TLD, declared dummy (D2)
+[assembly: AssemblyMetadata("DomainGuid", "be9f2bd9-9566-4ec0-b381-cfa56e33a2cb")] // one guid shared by all AppRepo samples
+#if DEBUG
+[assembly: AssemblyMetadata("DeployDebug", "debug")]
+#endif
+#if CONSOLE
+[assembly: AssemblyMetadata("ExeInterface", "console")]
+#endif
+
+// -- per-exe --
+[assembly: AssemblyProduct("Lookup.exe")]
+[assembly: AssemblyMetadata("ExeCodeName", "LOOKUP")]
+[assembly: Guid("ca1396cd-ad8b-4ff3-91df-2e823b513e07")]
+[assembly: AssemblyVersion("2026.07.19.1200")] // explicit yyyy.MM.dd.HHmm; a 0.0.0.0 version falls back to the exe's file timestamp (see Exe.cs)
 
 namespace Samples
 {
@@ -13,10 +47,12 @@ namespace Samples
     /// (no intermediate strings), sorts the index, and answers key
     /// queries by binary search over the views - materializing text
     /// only when an answer is written out. The zero-copy load pattern
-    /// used by AppLab's Cmd.OpsUser, in miniature - see README.md
-    /// beside this file.
+    /// used by AppLab's Cmd.OpsUser, in miniature. This is an identity
+    /// pass only (JOB.SAMPLES step 5): the [assembly:] block above is
+    /// new, everything else below is the existing Lookup behavior,
+    /// unchanged - see README.md beside this file.
     /// </summary>
-    internal static class Program
+    internal static class LookupMain
     {
         // Every module that raises Issues declares its issueSource;
         // each raise site gets a distinct Spot byte. Source77NW core
@@ -54,6 +90,13 @@ namespace Samples
 
         private static int Main()
         {
+            // Sample-grade boot (D1): a real multi-exe domain wires this
+            // once via a shared ExeBoot.Initialize() - see AppLab's
+            // EXE$ExeBoot.cs - a standalone sample inlines the one call
+            // it actually needs: a process-wide critical-issue handler.
+            Exe.SetCritical(theCritical =>
+                Console.Error.WriteLine(theCritical.Header_Detail_Message_Inner));
+
             try
             {
                 // keys wait on their own stack until the doc is loaded
