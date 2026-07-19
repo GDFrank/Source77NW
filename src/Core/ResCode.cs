@@ -416,7 +416,11 @@ namespace Source77NW
                     if (sVal.Length == 1 && char.IsLetter(sVal[0]))
                     {
                         // single-letter hint: AMP before that letter of cap
-                        int i = vCap.IndexOf(sVal[0], true);
+                        // FIX: IndexOf returns a BASE-STRING index; sCap is the
+                        // view's text, so convert to a view OFFSET before the
+                        // Substring split (crashed BadIndex 24.800.1 when cap
+                        // was a view into the attribute text, e.g. "|cap Save|mnu S|").
+                        int i = vCap.OffsetOfIndex(vCap.IndexOf(sVal[0], true));
                         if (i > 0)
                             vValue = new Chars(sCap.Substring(0, i) + Chars.AMP + sCap.Substring(i));
                         else

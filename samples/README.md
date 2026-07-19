@@ -23,7 +23,9 @@ dotnet run --project samples/Inspect -- . H -d 2
 ```
 
 Each sample targets one modern TFM (the library itself proves
-net481/net8.0/net10.0 — see `src/LIBS.csproj`).
+net481/net8.0/net10.0 — see `src/LIBS.csproj`). The `EnumCodes`
+sample is `net8.0-windows` (WinForms): it builds everywhere via
+`EnableWindowsTargeting`, but runs on Windows only.
 
 ## The samples
 
@@ -31,6 +33,7 @@ net481/net8.0/net10.0 — see `src/LIBS.csproj`).
 |--------|---------------------|-----------|
 | [`Inspect`](Inspect/) | walks a folder tree and reports attribute bits, with filter, depth limit, and a depth-first/breadth-first switch | `Issue` (Kind dispatch), `Chars` (zero-alloc parsing), `ItemStack` (one structure, both walk orders), `FileAttr`/`FileAttrX`, `ExeLock`, `Exe`, `FS`, `ExitId` |
 | [`Lookup`](Lookup/) | loads an LSV glossary once and answers key queries by binary search over Chars views — zero strings from file to console | `LsvDoc`/`LsvRecord`, `Chars` (views, CompareTo, Write), `ItemStack` (Comparer, Sort, BinarySearchNearest), `Issue`, `Exe` |
+| [`EnumCodes`](EnumCodes/) | a WinForms app whose whole UI — menus, toggles, a radio group, buttons, shortcuts, icons, dispatch, persisted state — is declared by one enum (Windows-only TFM) | `EnumCodes`, `EnumCodesAttribute`/`EnumInfoAttribute`, `ResCode`, `CodeValId`/`CodeDefId`/`ResKind`, `BytesReader` (stream providers), `Chars` (VBAR fields, ctrl parsing) |
 
 ## Find a type
 
@@ -44,3 +47,4 @@ net481/net8.0/net10.0 — see `src/LIBS.csproj`).
 | `Exe` | `Inspect` — `GetCommandLineParams`, `ExeNameOnly`, guarded `IsAdmin` |
 | `FS` | `Inspect` — `ValidFolderPath_or_null`, `AsFileIssue` |
 | `LsvDoc`, `LsvRecord` | `Lookup` — one text, records as views, fields on demand |
+| `EnumCodes`, `ResCode`, `EnumInfoAttribute` | `EnumCodes` — one enum as the whole UI: truth table, index-aligned slots, ByteCode persistence, icon/ctrl fields |

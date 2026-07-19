@@ -1,0 +1,25 @@
+<!-- EnumCodes.csproj - Copyright (c) GDFrank
+     SPDX-License-Identifier: MIT
+     ================================================================
+     SAMPLE: an entire WinForms UI driven by one enum through
+     EnumCodes + ResCode + EnumInfoAttribute - see README.md beside
+     this file. Sample-tree defaults (Exe, no doc file, not packable)
+     come from ..\Directory.Build.props. Windows-only TFM: this
+     pattern IS a windowed-UI pattern; EnableWindowsTargeting keeps
+     SAMPLES.slnx compiling on non-Windows CI (build, not run).
+     ================================================================ -->
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>Samples</RootNamespace>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\LIBS.csproj" />
+  </ItemGroup>
+
+</Project>
