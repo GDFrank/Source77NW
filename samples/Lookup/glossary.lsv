@@ -1,46 +1,86 @@
 Source77NW glossary - LSV sample data for the Lookup sample.
-This preamble is ignored by the parser: a record begins at a ':'
-line, and '.' lines within it carry the value fields. Multi-line
-values need no escaping - that is the point of LSV.
+This preamble is free space: everything before the first record
+marker is ignored by the parser. The convention:
+
+  :<recordCode> <name/values>    begins a record
+  .<fieldName> <value>           begins a named field
+  unmarked lines                 continue the field's value
+
+Fields are optional and repeatable per record; multi-line values
+need no escaping. Lookup indexes ':def' records by name; other
+record codes (':rem' remarks, ':::' dividers) are skipped.
 
 :GLOSSARY Source77NW terms
-. sample data for samples/Lookup
+.what sample data for samples/Lookup
 
-:LOUD
-. Contract violations throw an Issue immediately - misuse of the
-. library is never absorbed.
+:rem A remark record - Lookup's record-code filter skips this, the
+same way Cmd.OpsUser skips REM records in an OPS document.
 
-:SOFT
-. Absence is a state, not an error: Try*/Got*/Did* surfaces report
-. a miss with bool + out instead of throwing.
+:def LOUD
+.desc Contract violations throw an Issue immediately - misuse of
+the library is never absorbed.
+.ant SOFT
+.note The Issue regime is the LOUD channel: raise with a distinct
+Spot, dispatch by Kind at the boundary that can respond.
 
-:Chars
-. A struct view (BotIndex, TopIndex) over one base string; scanning
-. and parsing move the bounds - no substrings are created.
+:def SOFT
+.desc Absence is a state, not an error: Try*/Got*/Did* surfaces
+report a miss with bool + out instead of throwing.
+.ant LOUD
+.note The method name tells you the miss behavior - Got/Plucked
+return false, *_or_null returns null, *_or_NUL returns '\0'.
 
-:Pluck
-. Consume from the bottom of a view or stack; Pop consumes from the
-. top. Plucked* methods return bool with the value as out.
+:def Pluck
+.desc Consume from the bottom of a view or stack.
+.ant Pop
+.note Chars plucks chars, tokens, digits, and lines from the view
+bottom; ItemStack.Pluck() takes the oldest item (FIFO).
 
-:ItemStack
-. A sliding-window stack that is also a cheap queue: Push, Pop
-. (LIFO), Pluck (FIFO), Sort, BinarySearch - a bare-metal core.
+:def Pop
+.desc Consume from the top of a view or stack.
+.ant Pluck
+.note ItemStack.Pop() takes the newest item (LIFO); the same stack
+serves both orders, which is the whole trick of samples/Inspect.
 
-:Issue
-. The single application exception: Kind + Source + Spot pack into
-. HResult; handling dispatches on Kind, not on exception type.
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-:Spot
-. A byte pinning the exact raise site within a module's issueSource.
+:def Chars
+.desc A struct view (BotIndex, TopIndex) over one base string;
+scanning and parsing move the bounds - no substrings are created.
+.note Compares by content, so views over DIFFERENT base strings
+sort and search together - see samples/Lookup itself.
+.note Write(TextWriter) streams the view out: even output needs
+no ToString.
 
-:ARHSCE
-. FileAttr's six-char dot format: Archive ReadOnly Hidden System
-. Compressed Encrypted.
+:def ItemStack
+.desc A sliding-window stack that is also a cheap queue: Push, Pop
+(LIFO), Pluck (FIFO), Sort, BinarySearch - a bare-metal core.
+.note Single-threaded, lock-free, loud on misuse; StackAgent is
+the wrapping Agent when exposure needs guarding.
 
-:LSV
-. Line Separated Values: ':' begins a record, '.' begins a field
-. line - multi-line values need no escaping.
+:def Issue
+.desc The single application exception: Kind + Source + Spot pack
+into HResult; handling dispatches on Kind, not on exception type.
+.note Core tiers reserve issueSource 65,000+; samples and apps use
+the low range.
 
-:Agent
-. The wrapping layer that adds locking, async, and validation around
-. a bare-metal core (StackAgent around ItemStack).
+:def Spot
+.desc A byte pinning the exact raise site within a module's
+issueSource number.
+
+:def ARHSCE
+.desc FileAttr's six-char dot format: Archive ReadOnly Hidden
+System Compressed Encrypted.
+
+:def LSV
+.desc Line Separated Values: ':' begins a record (record code
+first), '.' begins a named field, and unmarked lines continue the
+field's value.
+.note The markers are positional, so the only restriction on value
+text is that a line may not BEGIN with ':' or '.'; multi-line
+values therefore need no escaping - the format's founding trick.
+
+:def Agent
+.desc The wrapping layer that adds locking, async, and validation
+around a bare-metal core (StackAgent around ItemStack).
+.ant Core

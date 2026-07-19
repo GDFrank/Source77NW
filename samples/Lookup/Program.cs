@@ -34,14 +34,16 @@ namespace Samples
 
         private const string DocName = "GLOSSARY";
 
+        private const string RecordCode = "def"; // the record type we index; others (rem, dividers) are skipped
+
         /// <summary>One indexed record: the key VIEW and the record it
         /// came from - four ints and a string reference each, all
         /// pointing into the one loaded document text. Nothing here is
         /// a new string.</summary>
         private struct Entry
         {
-            public Chars Key;           // = Record.Context, captured once
-            public LsvRecord Record;    // value fields, enumerated on demand
+            public Chars Key;           // = the name after the record code, captured once
+            public LsvRecord Record;    // named fields, enumerated on demand
         }
 
         private static readonly LsvDoc _Doc = new LsvDoc();
@@ -163,7 +165,7 @@ namespace Samples
 
         // ONE file read -> ONE string (LsvDoc.DocText). Every record is
         // then a set of (BotIndex, TopIndex) views into that string:
-        // the key is the record's Context view, the value is the record
+        // the key is the record's name view, the value is the record
         // itself with its fields still unenumerated. Sorting compares
         // the key views in place; nothing is copied out.
         private static bool _Loaded(string theFilePath, out Issue returnIssue)
@@ -197,15 +199,22 @@ namespace Samples
 
             while (_Doc.PluckedItemRecord(out LsvRecord vRecord))
             {
-                Entry vEntry = new Entry()
+                // the OpsUser move: split the record context into its
+                // record code and the remainder, then dispatch on the code
+                vRecord.Context.GotNameAndText(out Chars vCode, out Chars vKey);
+
+                if (!vCode.Equals(RecordCode, ignoreCase: true)) continue;
+                // ^ ':rem' remarks, ':::' dividers, unknown codes: skipped
+
+                vKey.Trim();
+
+                if (vKey.IsEmpty) continue;
+
+                _Entries.Push(new Entry()
                 {
-                    Key = vRecord.Context, // parsed ONCE, kept as the view
-                    Record = vRecord,
-                };
-
-                if (vEntry.Key.IsEmpty) continue; // ':::' separators etc.
-
-                _Entries.Push(vEntry);
+                    Key = vKey,        // parsed ONCE, kept as the view
+                    Record = vRecord,  // named fields, enumerated on demand
+                });
             }
 
             _Entries.Sort();
@@ -249,11 +258,33 @@ namespace Samples
 
             int iCursor = 0;
 
-            while (vEntry.Record.GotNextFieldValue(ref iCursor, out Chars vField))
+            while (vEntry.Record.GotNextFieldNameAndValue(ref iCursor, out Chars vName, out Chars vValue))
             {
+                // fields are optional and repeatable - whatever the record
+                // carries is what prints, in order
+
                 Console.Write("  ");
-                vField.Write(Console.Out);
-                Console.WriteLine();
+                vName.Write(Console.Out);
+
+                int iPad = 6 - vName.Length;
+
+                Console.Write(new string(' ', iPad > 1 ? iPad : 1));
+
+                // a multi-line value is ONE view with embedded line
+                // separators; re-indent it line by line - still views
+                bool bFirst = true;
+
+                vValue.Trim();
+
+                while (vValue.PluckedLine(out Chars vLine))
+                {
+                    if (!bFirst) Console.Write("        ");
+
+                    bFirst = false;
+
+                    vLine.Write(Console.Out);
+                    Console.WriteLine();
+                }
             }
 
             Console.WriteLine();

@@ -39,8 +39,8 @@ index entry is deliberately tiny:
 ```csharp
 private struct Entry
 {
-    public Chars Key;           // = Record.Context, captured once
-    public LsvRecord Record;    // value fields, enumerated on demand
+    public Chars Key;           // = the name after the record code, captured once
+    public LsvRecord Record;    // named fields, enumerated on demand
 }
 ```
 
@@ -53,11 +53,20 @@ loop:
 ```csharp
 while (_Doc.PluckedItemRecord(out LsvRecord vRecord))
 {
-    _Entries.Push(new Entry() { Key = vRecord.Context, Record = vRecord });
+    vRecord.Context.GotNameAndText(out Chars vCode, out Chars vKey);
+
+    if (!vCode.Equals(RecordCode, ignoreCase: true)) continue;
+
+    _Entries.Push(new Entry() { Key = vKey.Trim(), Record = vRecord });
 }
 
 _Entries.Sort();
 ```
+
+The `GotNameAndText` split is the record-code dispatch — `:def`
+records are indexed by the name that follows the code; `:rem`
+remarks and `:::` dividers fall through the filter, exactly as
+`Cmd.OpsUser` skips REM records in an OPS document.
 
 (`Cmd.OpsUser` compresses one step further — storing raw
 `ValueBot`/`ValueTop` ints and rebuilding the view in its
@@ -111,15 +120,21 @@ a real string to reach the file system) — and on output it turns out
 ```csharp
 vEntry.Key.Write(Console.Out);
 
-while (vEntry.Record.GotNextFieldValue(ref iCursor, out Chars vField))
+while (vEntry.Record.GotNextFieldNameAndValue(ref iCursor, out Chars vName, out Chars vValue))
 {
-    vField.Write(Console.Out);
+    vName.Write(Console.Out);
+
+    while (vValue.PluckedLine(out Chars vLine))
+    {
+        vLine.Write(Console.Out);   // re-indented in the real code
+    }
 }
 ```
 
-`Chars.Write(TextWriter)` streams the view directly. From file read
-to console, the happy path of this program materializes zero
-strings from the document.
+`Chars.Write(TextWriter)` streams each view directly — the field
+name, and a multi-line value re-indented line by line, every line
+itself a view. From file read to console, the happy path of this
+program materializes zero strings from the document.
 
 Where OpsUser *does* intern its tokens (`vName.ToString()`), it is
 for a reason this sample can point at: those tokens cross into
@@ -127,14 +142,33 @@ CmdApp's global string-keyed lookup — a boundary where the string
 earns its allocation. That is the pattern's real discipline: not
 "never make strings," but *know which boundary pays for one*.
 
-## The LSV format, incidentally
+## The LSV format, on display
 
-The data file (`glossary.lsv`, copied beside the exe) shows the
-format doing its trick: a record begins at a `:` line, `.` lines
-carry the fields, and multi-line values need no escaping — the
-markers are positional, so the only restriction on value text is
-that a line may not *begin* with `:` or `.`. Preamble above the
-first record is free space for notes, and the first record is the
+The data file (`glossary.lsv`, copied beside the exe) is written to
+show the format's strengths, under the house convention:
+
+```
+:<recordCode> <name/values>    begins a record
+.<fieldName> <value>           begins a named field
+unmarked lines                 continue the field's value
+```
+
+```
+:def SOFT
+.desc Absence is a state, not an error: Try*/Got*/Did* surfaces
+report a miss with bool + out instead of throwing.
+.ant LOUD
+```
+
+Because the markers are positional (a line may not *begin* with `:`
+or `.` — the only restriction on value text), a value continues
+across unmarked lines with **no escaping**. Fields are **optional**
+— `Spot` carries only a `.desc`, and `Lookup` simply prints what a
+record has — and **repeatable** — `Chars` carries two `.note`
+fields, and the enumeration yields both in order. Preamble above
+the first record is free documentation space; `:rem` records hold
+remarks the code filter skips; a `::::::` line is a pure visual
+divider (repeated markers collapse). The first record is the
 document header — `Lookup` checks `IsDocName("GLOSSARY")` and
 answers a wrong document with a `BadData` Issue, exactly as OpsUser
 guards its `OPS` documents.
