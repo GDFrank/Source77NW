@@ -1,4 +1,4 @@
-// CopyrightCopyright (c) GDFrank
+// Copyright (c) GDFrank
 // SPDX-License-Identifier: MIT
 
 #if NETCOREAPP && !NO_CORE

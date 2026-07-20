@@ -1,4 +1,4 @@
-// CopyrightCopyright (c) GDFrank
+// Copyright (c) GDFrank
 // SPDX-License-Identifier: MIT
 
 using System;
