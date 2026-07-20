@@ -10,22 +10,52 @@
      \Directory.Build.props. This file keeps only what is specific
      to THIS project.
      ================================================================ -->
-
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>net481;net8.0;net10.0</TargetFrameworks>
     <AssemblyName>Source77NW.Base</AssemblyName>
   </PropertyGroup>
 
+  <!-- ================================================================
+       Public release version - EDIT THESE BY HAND when cutting a release.
+       Major: bump only on a breaking API/binary-compat change (this also
+              drives AssemblyVersion below - moves rarely, on purpose).
+       Minor: bump for additive, backward-compatible changes.
+       Patch: bump for fixes/tweaks that change nothing structurally.
+       ================================================================ -->
+  <PropertyGroup>
+    <Major>1</Major>
+    <Minor>0</Minor>
+    <Patch>0</Patch>
+  </PropertyGroup>
+
+  <!-- ================================================================
+       Derived versions - do not edit directly.
+       AssemblyVersion: binding contract for consumers - Major.0.0.0 only,
+                        so adding Minor/Patch releases never forces a
+                        rebuild/rebind of dependents.
+       Version/PackageVersion: what NuGet/consumers actually see.
+       InformationalVersion: human SemVer + build traceability stamp.
+       ================================================================ -->
+  <PropertyGroup>
+    <AssemblyVersion>$(Major).0.0.0</AssemblyVersion>
+    <Version>$(Major).$(Minor).$(Patch)</Version>
+
+    <BuildYear>$([System.DateTime]::Now.ToString(yyyy))</BuildYear>
+    <BuildMonth>$([System.DateTime]::Now.ToString(MM))</BuildMonth>
+    <BuildDay>$([System.DateTime]::Now.ToString(dd))</BuildDay>
+    <BuildHHmm>$([System.DateTime]::Now.ToString(HHmm))</BuildHHmm>
+    <BuildStamp>$(BuildYear).$(BuildMonth).$(BuildDay).$(BuildHHmm)</BuildStamp>
+
+    <InformationalVersion>$(Version)+$(BuildStamp)</InformationalVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="Base\**\*.cs" />
   </ItemGroup>
-
   <!-- net481: framework assemblies not in the SDK implicit set -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
-
 </Project>
