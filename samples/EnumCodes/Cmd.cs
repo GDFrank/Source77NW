@@ -1,4 +1,4 @@
-// Copyright (c) GDFrank
+// CopyrightCopyright (c) GDFrank
 // SPDX-License-Identifier: MIT
 
 using Source77NW;
