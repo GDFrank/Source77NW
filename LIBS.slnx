@@ -1,3 +1,8 @@
 <Solution>
-  <Project Path="src/LIBS.csproj" />
+  <!-- All library projects. Each csproj lives in src\ and compiles
+       exactly one source subfolder; a placeholder folder (NT\, UI\,
+       UI1\, ...) gains a Source77NW.<Tier>.csproj and an entry here
+       when its sources arrive. Peers: SAMPLES.slnx (all samples),
+       APPS.slnx (all apps, when the first app arrives). -->
+  <Project Path="src/Source77NW.Base.csproj" />
 </Solution>

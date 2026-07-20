@@ -2,8 +2,8 @@
      SPDX-License-Identifier: MIT
      ================================================================
      SAMPLE: filtered folder-tree file lister -> TSV - see README.md
-     beside this file. Samples target ONE modern TFM: the LIBS
-     project already proves tri-target compatibility; samples stay
+     beside this file. Samples target ONE modern TFM: the Base
+     library already proves tri-target compatibility; samples stay
      quick to build and clear to read. Sample-tree defaults (Exe, no
      doc file, not packable) come from ..\Directory.Build.props.
      ================================================================ -->
@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\LIBS.csproj" />
+    <ProjectReference Include="..\..\src\Source77NW.Base.csproj" />
   </ItemGroup>
 
 </Project>

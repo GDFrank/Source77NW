@@ -1,0 +1,39 @@
+<!-- Directory.Build.props - Copyright (c) GDFrank
+     SPDX-License-Identifier: MIT
+     ================================================================
+     Library-tree defaults. Imports the repo-wide props, then adds
+     what every LIBRARY project shares. All library csprojs live in
+     THIS folder, side by side, each owning one source subfolder
+     (Base\, NT\, UI\, UI1\, ...). Because they share the folder:
+       - default item globbing is OFF: a project compiles ONLY the
+         *.cs it explicitly <Compile Include>s (its own subfolder)
+       - bin\ and obj\ are split by project name so outputs and
+         intermediates never collide.
+     Per-project files keep only what genuinely differs: TFMs,
+     AssemblyName, references, and the Compile include.
+     ================================================================ -->
+
+<Project>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup>
+    <!-- Side-by-side csprojs: no shared globbing, no shared output -->
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <BaseIntermediateOutputPath>obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <BaseOutputPath>bin\$(MSBuildProjectName)\</BaseOutputPath>
+
+    <!-- Flat Source77NW namespace is declared in the sources -->
+    <RootNamespace></RootNamespace>
+
+    <!-- Library-grade strictness, shared by every library project -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- CS1591 (missing XML comment) is LIVE repo-wide since the
+         JOB.CS1 doc-curation pass (2026-07-17). The deliberate
+         exemptions (caption-name enums, ASCII consts) are scoped
+         per-file in \.editorconfig - see CS1591 EXEMPTIONS there. -->
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+</Project>

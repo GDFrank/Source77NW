@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\LIBS.csproj" />
+    <ProjectReference Include="..\..\src\Source77NW.Base.csproj" />
   </ItemGroup>
 
   <ItemGroup>

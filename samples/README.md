@@ -22,8 +22,8 @@ dotnet build SAMPLES.slnx
 dotnet run --project samples/ListFiles -- . +H -all
 ```
 
-Each sample targets one modern TFM (the library itself proves
-net481/net8.0/net10.0 — see `src/LIBS.csproj`). The `EnumCodes`
+Each sample targets one modern TFM (the Base library itself proves
+net481/net8.0/net10.0 — see `src/Source77NW.Base.csproj`). The `EnumCodes`
 sample is `net8.0-windows` (WinForms): it builds everywhere via
 `EnableWindowsTargeting`, but runs on Windows only.
 

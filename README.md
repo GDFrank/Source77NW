@@ -8,7 +8,7 @@ Zero-allocation parsing, minimal heap motion, explicit readable code. Developed 
 
 ## Targets
 
-One project, three outputs:
+Each library project multi-targets. The Base library ships three outputs:
 
 | TFM | Why |
 |-----|-----|
@@ -36,11 +36,29 @@ Sources are C# 7.3 baseline with `#if` blocks carrying per-target differences �
 
 ## Structure
 
+Three root solutions, one per project family:
+
+| Solution | Loads |
+|----------|-------|
+| `LIBS.slnx` | every library project |
+| `SAMPLES.slnx` | every sample project, plus the library they reference |
+| `APPS.slnx` | every app project *(arrives with the first app)* |
+
 ```
-src/Source77NW/           the library (one project, all sources)
-tests/Source77NW.Tests/
-samples/                  runnable demos - learn the API in place
+src/                          all library projects, side by side
+  Source77NW.Base.csproj        the Base library (net481/net8.0/net10.0)
+  Base/                         Base sources — the whole curated core today
+  NT/  UI/  UI1/                placeholder tiers — each becomes its own
+                                Source77NW.<Tier> project when populated
+samples/                      runnable demos — one folder + csproj each
 ```
+
+Library csprojs share `src/` without stepping on each other: each
+project compiles **only the source subfolder it explicitly includes**
+(default globbing is off, and `bin/`/`obj/` are split per project —
+see `src/Directory.Build.props`). Adding a library tier is three
+moves: populate its folder, add a `Source77NW.<Tier>.csproj` beside
+the others, list it in `LIBS.slnx`.
 
 ## Conventions (reader's key)
 
@@ -55,6 +73,3 @@ Curation in progress: visibility pass (internal → public) and XML documentatio
 **License:** [MIT](LICENSE)
 **Namespace:** `Source77NW`
 **Contact:** GitHub issues
-"# Source77NW" 
-"# Source77NW" 
-"# Source77NW" 

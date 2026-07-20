@@ -1,5 +1,8 @@
 <Solution>
-  <Project Path="src/LIBS.csproj" />
+  <!-- All sample projects, plus the library they reference so
+       go-to-definition lands in source. Peers: LIBS.slnx (all
+       libraries), APPS.slnx (all apps, when the first arrives). -->
+  <Project Path="src/Source77NW.Base.csproj" />
   <Project Path="samples/ListFiles/ListFiles.csproj" />
   <Project Path="samples/Lookup/Lookup.csproj" />
   <Project Path="samples/EnumCodes/EnumCodes.csproj" />
