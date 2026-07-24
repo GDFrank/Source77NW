@@ -103,12 +103,28 @@ namespace Source77NW
     /// per enum type, created on first ForType/ForCode call and cached. Thread safe.
     /// </summary>
     /// <remarks>
+    /// <para>
+    /// A code is just a code - context and usage determine meaning.
+    /// EnumCodes is a generic container, structurally parallel to LSV: it holds
+    /// BITS (Flag64/Flag32/ByteCode - the enum's own underlying value), TEXT
+    /// (EnumCodesAttribute.Text / EnumInfoAttribute.Text - any string), and TAGS
+    /// (EnumCodesAttribute.Tag / EnumInfoAttribute.Tags - any object(s)), and
+    /// nothing else. It does not interpret any of these - what the bits mean,
+    /// how the text is parsed, what the tags are for is entirely up to whatever
+    /// UI or process reads a given set of codes. Bits suit simple, high-speed
+    /// truth-table processing (membership tests, persisted ByteCode references);
+    /// Text and Tags suit construction and UI operations (menus, tooltips,
+    /// argument-building, wiring relationships between codes).
+    /// </para>
+    /// <para>
     /// Creation throws (as Issue) when the enum has more than 256 values, values
     /// are unsorted or not unique, low bytes (ByteCodes) are not unique, or names
     /// are not unique ignoring case. ByteCode is safe for PERSISTED references
     /// providing it never changes; manage changes via EnumCodesAttribute.Version.
     /// Indexes and names are runtime-only, never for persisting. Enums should be
-    /// byte/ushort/uint/ulong. See also ResCode.cs, EnumVals.cs, Bits.cs.
+    /// byte/ushort/uint/ulong. See also ResCode.cs, EnumVals.cs, Bits.cs (one
+    /// possible Flag32 bit-layout scheme among others EnumCodes doesn't assume).
+    /// </para>
     /// </remarks>
     public sealed class EnumCodes : IComparable<EnumCodes>
     {
