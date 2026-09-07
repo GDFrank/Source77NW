@@ -1,0 +1,74 @@
+<!-- Source77NW.Core.NT.csproj - Copyright (c) GDFrank
+     SPDX-License-Identifier: Apache-2.0
+     ================================================================
+     The Core.NT flavor dll: Source77NW.Core.NT.dll = Core.Base's
+     sources compiled IN + Core.NT's NT-dependent modules (registry,
+     system management, shell...) - no UI. Linked globs below, no
+     ProjectReference - an exe links exactly ONE Source77NW dll.
+     Pure-classification layout: this project folder holds ONLY this
+     csproj (plus README) - no source of its own. Sources live in the
+     pure classification folders Core.Base\ and Core.NT\ (plain *.cs,
+     no csproj, no subfolders) - see ..\README.md for the DLL/tier
+     naming scheme. ALL sources declare the single Source77NW
+     namespace. Never link this dll and Source77NW.Core.Base.dll (or
+     Source77NW.NT.Forms.dll) together - every Core.Base/Core.NT type
+     already exists in here too.
+     net8.0/net10.0 use the -windows suffix, same reasoning as
+     Source77NW.NT.Forms: NT.RegVals.cs (Microsoft.Win32.Registry) and
+     NT-PutInfoSys.cs (Registry + kernel32 P/Invoke) are compile-time
+     Windows-bound sources - CA1416 fires on every call site under a
+     non-windows TFM otherwise. net481 needs no suffix (Framework APIs
+     are always "compatible").
+     ================================================================ -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net481;net8.0-windows;net10.0-windows</TargetFrameworks>
+    <AssemblyName>Source77NW.Core.NT</AssemblyName>
+    <RootNamespace>Source77NW</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Core.Base/Core.NT sources live in the pure classification folders
+       (no csproj there, so no bin\/obj\ to exclude); linked in here so
+       this project builds them as its own. LinkBase groups them under
+       matching nodes in the IDE. -->
+  <ItemGroup>
+    <Compile Include="..\Core.Base\**\*.cs" LinkBase="Core.Base" />
+    <Compile Include="..\Core.NT\**\*.cs" LinkBase="Core.NT" />
+  </ItemGroup>
+
+  <!-- ================================================================
+       Derived versions - do not edit directly. Major/Minor/Patch/Build
+       come from the repo-wide Directory.Version.props.
+       AssemblyVersion: binding contract for consumers - Major.0.0.0 only,
+                        so adding Minor/Patch releases never forces a
+                        rebuild/rebind of dependents.
+       Version/PackageVersion: what NuGet/consumers actually see -
+                        4-part M.m.p.b: Build counts content refreshes
+                        since the M.m.p release (release = .0).
+       InformationalVersion: human SemVer + build traceability stamp.
+       ================================================================ -->
+  <PropertyGroup>
+    <AssemblyVersion>$(Major).0.0.0</AssemblyVersion>
+    <Version>$(Major).$(Minor).$(Patch).$(Build)</Version>
+
+    <BuildYear>$([System.DateTime]::Now.ToString(yyyy))</BuildYear>
+    <BuildMonth>$([System.DateTime]::Now.ToString(MM))</BuildMonth>
+    <BuildDay>$([System.DateTime]::Now.ToString(dd))</BuildDay>
+    <BuildHHmm>$([System.DateTime]::Now.ToString(HHmm))</BuildHHmm>
+    <BuildStamp>$(BuildYear).$(BuildMonth).$(BuildDay).$(BuildHHmm)</BuildStamp>
+
+    <InformationalVersion>$(Version)+$(BuildStamp)</InformationalVersion>
+  </PropertyGroup>
+
+  <!-- net481: framework assemblies not in the SDK implicit set
+       (needed by the compiled-in Core.Base sources; mirrors the other
+       flavor csprojs). -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <!-- NT.Mgmt uses dynamic (RuntimeBinder) for reflection-only WMI
+         access; net8.0/net10.0 carry Microsoft.CSharp in-box via the
+         SDK's implicit framework reference, net481 does not. -->
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+</Project>

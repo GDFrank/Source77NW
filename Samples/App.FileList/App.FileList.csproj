@@ -1,0 +1,27 @@
+<!-- App.FileList.csproj - Copyright (c) GDFrank
+     SPDX-License-Identifier: Apache-2.0
+     ================================================================
+     SAMPLE: property-selectable file/folder listing -> csv/tsv/lsv/md -
+     see README.md beside this file. Sample-tree defaults (Exe, no doc
+     file, not packable, Config.cs link, AssemblyVersion auto-
+     stamp) come from ..\Directory.Build.props. Project folder/csproj
+     carry the App. prefix as a source-organization convention only -
+     AssemblyName is pinned below so the actual tool identity
+     (FileList.exe) doesn't change; ListView shells out to it by that
+     exact name.
+     ================================================================ -->
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>FileList</AssemblyName>
+    <RootNamespace>Samples77NW</RootNamespace>
+    <DefineConstants>$(DefineConstants);CONSOLE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\Source77NW.Core.Base\Source77NW.Core.csproj" />
+  </ItemGroup>
+
+</Project>

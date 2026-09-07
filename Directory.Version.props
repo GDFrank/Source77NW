@@ -1,0 +1,28 @@
+<!-- Directory.Version.props - Copyright (c) GDFrank
+     SPDX-License-Identifier: Apache-2.0
+     ================================================================
+     Central release-version file - RepoPub's own copy. NOT synced:
+     dev.sync excludes props files (repo identity), so this copy is
+     written explicitly by the same scripts that write RepoDev's -
+     Set-ReleaseVersion.ps1 (`do config`, release: new M.m.p,
+     Build=0) and Step-Build.ps1 (`do pub.refresh`, refresh:
+     Build+1). The two copies are kept identical by those writes.
+     See RepoDev's copy for the full explanation of the import
+     chain and the Build field's meaning.
+
+     RECREATED 2026-09-01: G manually deleted every file in RepoPub
+     except .git*, for a clean re-test of the first real dev.sync -
+     that included this file, which Set-ReleaseVersion.ps1 only
+     ever UPDATES, never creates from scratch (its own "PHASE 1
+     needs to have created it first" error is what flagged this).
+     Values below are a placeholder skeleton - `do config` overwrites
+     Major/Minor/Patch/Build the moment it runs.
+     ================================================================ -->
+<Project>
+  <PropertyGroup>
+    <Major>1</Major>
+    <Minor>0</Minor>
+    <Patch>0</Patch>
+    <Build>5</Build>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,50 @@
+<!-- App.ListView.csproj - Copyright (c) GDFrank
+     SPDX-License-Identifier: Apache-2.0
+     ================================================================
+     SAMPLE: WinForms front-end for FileList.exe - see README.md
+     beside this file. ListView does not reimplement file listing; it
+     shells out to FileList.exe (built as a sibling and copied into
+     this project's own output folder by the target below) and loads
+     the result into a real System.Windows.Forms.ListView control -
+     hence the sample's name. Windows-only TFM (EnableWindowsTargeting
+     keeps Samples77NW.slnx building on non-Windows CI; running is
+     Windows-only either way).
+     Sample-tree defaults (Exe, no doc file, not packable,
+     Config.cs link, AssemblyVersion auto-stamp) come from
+     ..\Directory.Build.props. Project folder/csproj carry the App.
+     prefix as a source-organization convention only - AssemblyName
+     is pinned below so the actual tool identity (ListView.exe)
+     doesn't change.
+     ================================================================ -->
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>ListView</AssemblyName>
+    <RootNamespace>Samples77NW</RootNamespace>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\Source77NW.Core.Base\Source77NW.Core.csproj" />
+    <!-- Build-order dependency only - ListView invokes FileList.exe as
+         a subprocess (see MainForm.cs _RunFileList), never its types,
+         so no assembly reference is needed or wanted. -->
+    <ProjectReference Include="..\App.FileList\App.FileList.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <!-- Copies FileList's build output into ListView's own output folder
+       (a "FileList\" subfolder) so ListView can find and launch it at
+       runtime without fragile relative-path guessing across configs.
+       Hardcodes net8.0 (FileList's TFM) - update both csproj TFMs
+       together if either ever changes. -->
+  <Target Name="CopyFileListOutput" AfterTargets="Build">
+    <ItemGroup>
+      <_FileListOutputs Include="$(MSBuildThisFileDirectory)..\App.FileList\bin\$(Configuration)\net8.0\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_FileListOutputs)" DestinationFolder="$(OutDir)FileList\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

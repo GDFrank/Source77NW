@@ -1,0 +1,58 @@
+<!-- Directory.Build.props - Copyright (c) GDFrank
+     SPDX-License-Identifier: MIT
+     ================================================================
+     Sample-tree overrides. Imports the repo-wide props, then relaxes
+     library-grade strictness that has no meaning for samples: no XML
+     doc file (so no CS1591), never packed, and every sample is an
+     executable (console Exe by default; a windowed sample overrides
+     OutputType to WinExe in its own csproj). Samples DEMO the
+     library; the library's own rules stay in \Directory.Build.props
+     untouched.
+     ================================================================ -->
+
+<Project>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+
+    <!-- AUTO-STAMPED AssemblyVersion (EntryAssemblies only) - see
+         README.md "Build stamp" in this folder. Deterministic=false is
+         REQUIRED here or MSBuild caches/reuses the value across builds,
+         defeating the stamp (repo-wide Directory.Build.props sets
+         Deterministic=true; this override is scoped to Samples\ only).
+         Format matches Exe.cs's own 0.0.0.0 fallback (s_VersionFmt). -->
+    <Deterministic>false</Deterministic>
+    <AssemblyVersion>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmm"))</AssemblyVersion>
+
+    <!-- Company/Copyright/Product are declared by hand instead (Company
+         + Copyright in Config.cs; Product per-exe) - suppress
+         MSBuild's own versions of exactly those three (CS0579 dup
+         avoidance) while leaving GenerateAssemblyVersionAttribute ON so
+         the auto-stamp above actually takes effect. Guid is never
+         MSBuild-generated so needs no switch. AssemblyMetadata
+         attributes (Contact, DomainName, DomainGuid, ExeCodeName,
+         DeployDebug, ExeInterface) are likewise hand-declared and never
+         MSBuild-generated unless the AssemblyMetadata ItemGroup is
+         populated (it isn't here), so no switch is needed for those
+         either. -->
+
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Every sample exe links the ONE shared Config.cs - THE domain-
+         level file (domain [assembly:] block + static Config class:
+         boot, Folders/Settings stores, Permit, Assets, Lingo, Data) -
+         instead of duplicating any of it. Lives in the pure
+         classification folder Core.Base\ (see README.md for the tier
+         scheme) alongside other domain-common .cs. -->
+    <Compile Include="$(MSBuildThisFileDirectory)Core.Base\Config.cs" Link="Core.Base\Config.cs" />
+  </ItemGroup>
+
+</Project>

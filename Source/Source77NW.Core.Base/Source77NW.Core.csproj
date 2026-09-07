@@ -1,0 +1,66 @@
+<!-- Source77NW.Core.csproj - Copyright (c) GDFrank
+     SPDX-License-Identifier: Apache-2.0
+     ================================================================
+     The Core.Base library: assembly-role-agnostic modules, no UI/OS
+     deps. Multi-target: last .NET Framework + workhorse LTS +
+     frontier LTS.
+     Pure-classification layout: this project folder holds ONLY this
+     csproj (plus README) - no source of its own. Its sources live in
+     the pure classification folder Core.Base\ (plain *.cs, no csproj,
+     no subfolders), pulled in below via a linked Compile glob - see
+     ..\README.md for the DLL/tier naming scheme. ALL sources declare
+     the single Source77NW namespace - no sub-namespaces; Windows-
+     dependent modules live in Core.NT\ instead, keeping Core.Base
+     itself OS-dep-free. Flavor projects (Source77NW.Core.NT,
+     Source77NW.NT.Forms, ...) link Core.Base\ the same way, never via
+     ProjectReference to this dll - an exe links exactly ONE Source77NW
+     dll; never link this dll and a flavor dll together.
+     Shared strictness lives in Directory.Build.props (this tree);
+     repo-wide identity in the root \Directory.Build.props.
+     ================================================================ -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net481;net8.0;net10.0</TargetFrameworks>
+    <AssemblyName>Source77NW.Core.Base</AssemblyName>
+    <RootNamespace>Source77NW</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Sources live in the pure classification folder Core.Base\
+       (no csproj there); linked in here so this project builds them
+       as its own. LinkBase groups them under a Core.Base\ node in
+       the IDE. -->
+  <ItemGroup>
+    <Compile Include="..\Core.Base\**\*.cs" LinkBase="Core.Base" />
+  </ItemGroup>
+
+  <!-- ================================================================
+       Derived versions - do not edit directly. Major/Minor/Patch/Build
+       come from the repo-wide Directory.Version.props.
+       AssemblyVersion: binding contract for consumers - Major.0.0.0 only,
+                        so adding Minor/Patch releases never forces a
+                        rebuild/rebind of dependents.
+       Version/PackageVersion: what NuGet/consumers actually see -
+                        4-part M.m.p.b: Build counts content refreshes
+                        since the M.m.p release (release = .0).
+       InformationalVersion: human SemVer + build traceability stamp.
+       ================================================================ -->
+  <PropertyGroup>
+    <AssemblyVersion>$(Major).0.0.0</AssemblyVersion>
+    <Version>$(Major).$(Minor).$(Patch).$(Build)</Version>
+
+    <BuildYear>$([System.DateTime]::Now.ToString(yyyy))</BuildYear>
+    <BuildMonth>$([System.DateTime]::Now.ToString(MM))</BuildMonth>
+    <BuildDay>$([System.DateTime]::Now.ToString(dd))</BuildDay>
+    <BuildHHmm>$([System.DateTime]::Now.ToString(HHmm))</BuildHHmm>
+    <BuildStamp>$(BuildYear).$(BuildMonth).$(BuildDay).$(BuildHHmm)</BuildStamp>
+
+    <InformationalVersion>$(Version)+$(BuildStamp)</InformationalVersion>
+  </PropertyGroup>
+
+  <!-- net481: framework assemblies not in the SDK implicit set.
+       (Duplicated in every flavor csproj that compiles Core.Base in.) -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,27 @@
+<!-- App.ListFiles.csproj - Copyright (c) GDFrank
+     SPDX-License-Identifier: Apache-2.0
+     ================================================================
+     SAMPLE: filtered folder-tree file lister -> TSV - see README.md
+     beside this file. Samples target ONE modern TFM: the Base
+     library already proves tri-target compatibility; samples stay
+     quick to build and clear to read. Sample-tree defaults (Exe, no
+     doc file, not packable) come from ..\Directory.Build.props. Project
+     folder/csproj carry the App. prefix as a source-organization
+     convention only - AssemblyName is pinned below so the actual tool
+     identity (ListFiles.exe) doesn't change.
+     ================================================================ -->
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>ListFiles</AssemblyName>
+    <RootNamespace>Samples77NW</RootNamespace>
+    <DefineConstants>$(DefineConstants);CONSOLE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\Source77NW.Core.Base\Source77NW.Core.csproj" />
+  </ItemGroup>
+
+</Project>

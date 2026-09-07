@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Core.Base/Config.cs" />
+  </Folder>
+  <!-- App.CsvLsvEG, App.EnumCodingEG: WIP, deliberately excluded from
+       this solution (neither has a README yet / is listed in
+       Samples/README.md's index) - both build/test only via the WIP
+       twin, Samples77NW.WIP.slnx. Add back here once done (Docs/
+       building.md "WIP" - project-level; the diff between this file
+       and the WIP twin IS the sync-exclusion mechanism, see
+       Docs/releasing.md). -->
+  <Project Path="App.FileList/App.FileList.csproj" />
+  <Project Path="App.ListFiles/App.ListFiles.csproj" />
+  <Project Path="App.ListView/App.ListView.csproj" />
+  <Project Path="App.Lookup/App.Lookup.csproj" />
+  <Project Path="../Source/Source77NW.Core.Base/Source77NW.Core.csproj" />
+</Solution>

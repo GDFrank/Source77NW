@@ -1,0 +1,17 @@
+<Solution>
+  <!-- All library projects. Pure-classification layout: each project
+       folder Source77NW.<Tier>\ holds ONLY its csproj; sources
+       live in sibling pure folders <Tier>\ (plain *.cs, no
+       csproj, no subfolders) and are pulled in via linked Compile
+       globs - see README.md for the full DLL/tier naming scheme
+       (2026-07-31 refresh, JOB.77: realm/group model). A new tier
+       gains a <Tier>\ pure folder + a Source77NW.<Tier>\
+       project folder + an entry here when its sources arrive. Flavor
+       projects link Core.Base's + their own tier's sources in
+       (single Source77NW namespace throughout) - never link two
+       flavor/base dlls together. Peers: Samples77NW.slnx (all samples),
+       Apps77NW.slnx (all apps, when the first app arrives). -->
+  <Project Path="Source77NW.Core.Base/Source77NW.Core.csproj" />
+  <Project Path="Source77NW.Core.NT/Source77NW.Core.NT.csproj" />
+  <Project Path="Source77NW.NT.Forms/Source77NW.NT.csproj" />
+</Solution>

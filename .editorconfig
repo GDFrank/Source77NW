@@ -1,0 +1,44 @@
+# Source77NW - editor + analyzer configuration
+
+root = true
+
+[*]
+indent_style = space
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.cs]
+indent_size = 4
+# BOM retired repo-wide (JOB.CS1/CS2 2026-07-15): git-world sources are plain UTF-8
+charset = utf-8
+end_of_line = crlf
+
+# License header (IDE0073 flags files missing it; 'dotnet format' inserts it)
+file_header_template = Copyright (c) GDFrank\nSPDX-License-Identifier: MIT
+dotnet_diagnostic.IDE0073.severity = warning
+
+# ================================================================
+# CS1591 EXEMPTIONS (G 2026-07-17): missing-XML-doc enforcement is
+# LIVE repo-wide (csproj NoWarn removed after the JOB.CS1 doc pass).
+# The files below are exempt BY DESIGN - their public enum members
+# and consts are self-documenting (member names ARE the captions;
+# ASCII char consts per G's no-per-const ruling) and per-member ///
+# would be pure noise. The enum TYPES themselves are documented.
+# Tradeoff (accepted): future additions to these files are not
+# doc-policed - keep new public API out of them or doc it anyway.
+# When app projects join the .sln, add their caption-enum files to
+# this list.
+#   WordId.cs     - 158 caption-name members (ResCode/lingo)
+#   FS.cs         - IssueId (names are captions) + FolderId
+#   Csv.Reader.cs - Csv.IssueId (names are captions)
+#   Chars.cs      - ASCII char/string consts
+#   AS.cs         - ASCII/string consts
+#   Bits.cs       - ValId/ValFlag/CmdFlag/GrpFlag members are the
+#                   value-kind vocabulary itself (enum types doc'd)
+#   FileAttr.cs   - Bits members are letter-prefixed BCL names
+#   FileAttrX.cs  - Bits members are letter-prefixed BCL names
+[{WordId.cs,FS.cs,Csv.Reader.cs,Chars.cs,AS.cs,Bits.cs,FileAttr.cs,FileAttrX.cs}]
+dotnet_diagnostic.CS1591.severity = none
+
+[*.{yml,yaml,json}]
+indent_size = 2

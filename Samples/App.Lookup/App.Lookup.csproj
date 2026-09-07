@@ -1,0 +1,29 @@
+<!-- App.Lookup.csproj - Copyright (c) GDFrank
+     SPDX-License-Identifier: Apache-2.0
+     ================================================================
+     SAMPLE: zero-copy key lookup over one loaded text - see
+     README.md beside this file. Sample-tree defaults (Exe, no doc
+     file, not packable) come from ..\Directory.Build.props.
+     Project folder/csproj carry the App. prefix as a source-
+     organization convention only - AssemblyName is pinned below so
+     the actual tool identity (Lookup.exe) doesn't change.
+     ================================================================ -->
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>Lookup</AssemblyName>
+    <RootNamespace>Samples77NW</RootNamespace>
+    <DefineConstants>$(DefineConstants);CONSOLE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\Source77NW.Core.Base\Source77NW.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="glossary.lsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

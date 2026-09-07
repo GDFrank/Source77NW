@@ -1,0 +1,34 @@
+<!-- Directory.Build.props - Copyright (c) GDFrank
+     SPDX-License-Identifier: MIT
+     ================================================================
+     Library-tree defaults. Imports the repo-wide props, then adds
+     what every LIBRARY project shares. Pure-classification layout:
+     each library project lives in its own project folder under this
+     Source\ tree holding only its csproj; the sources live in the
+     classification folders (Core.Base\, Core.NT\, UI.*\) and are
+     linked in via Compile globs, so bin\/obj\ land inside the project
+     folder as normal. All sources share the single Source77NW
+     namespace (no sub-namespaces; Windows-dependent modules live in
+     Core.NT\). Flavor projects compile Core.Base's sources IN via
+     linked globs - no ProjectReferences between library projects (an
+     exe links exactly ONE Source77NW dll). Per-project files keep
+     only what genuinely differs: TFMs, AssemblyName, RootNamespace,
+     references, linked-glob includes.
+     ================================================================ -->
+
+<Project>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup>
+    <!-- Library-grade strictness, shared by every library project -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- CS1591 (missing XML comment) is LIVE repo-wide: every public
+         member carries a /// summary. The deliberate exemptions
+         (caption-name enums, ASCII consts) are scoped per-file in
+         \.editorconfig - see CS1591 EXEMPTIONS there. -->
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+</Project>
